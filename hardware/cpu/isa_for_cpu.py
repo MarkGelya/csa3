@@ -35,7 +35,7 @@ class SimpleInstruction(Instruction):
 class InstructionAddr(Instruction):
     pass
 
-class InstructionPort(ExecutableInstruction):
+class InstructionPort(Instruction):
     pass
 
 class HLT(SimpleInstruction):
