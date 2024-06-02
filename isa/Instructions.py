@@ -44,6 +44,7 @@ isa = {
     'JGE':  0b100_0100_0,
     'JL':   0b100_0101_0,
     'JLE':  0b100_0110_0,
+    'JEOF': 0b100_0111_0,
 
     'IN':   0b101_00000,
     'OUT':  0b110_00000,
@@ -259,7 +260,7 @@ class BYTES(ImaginaryInstruction):
                 return operand.value
             elif type(operand) == OperandString:
                 value = operand.value[1:-1]
-                return len(value.encode('ASCII')) if len(value.encode('ASCII')) <= 256 else 256
+                return len((bytearray([len(value)]) if len(value) < 256 else bytearray([0xFF])) + value.encode('ASCII')[:256])
         else:
             return 0
 
@@ -347,6 +348,9 @@ class JL(InstructionAddr):
 class JLE(InstructionAddr):
     pass
 
+class JEOF(InstructionAddr):
+    pass
+
 class IN(InstructionPort):
     pass
 
@@ -378,6 +382,7 @@ instructions = {
     'JGE':  JGE,
     'JL':   JL,
     'JLE':  JLE,
+    'JEOF': JEOF,
     'IN':   IN,
     'OUT':  OUT,
 }

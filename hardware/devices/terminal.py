@@ -3,7 +3,7 @@ from hardware.base.wire import Wire
 
 
 class Terminal:
-    def __init__(self):
+    def __init__(self, filename=None):
         self.counter = 0
         self.tick_on_work = 6
         self.is_work = False
@@ -13,7 +13,12 @@ class Terminal:
         self.read = False
 
         # From terminal to device
-        self.output_buff = bytearray(255)
+        if filename:
+            with open(filename, mode="rb") as f:
+                data = bytearray(f.read())[:255]
+                self.output_buff = bytearray([len(data)]) + data
+        else:
+            self.output_buff = bytearray(255)
         self.output_pointer = 0
 
         # From device to terminal

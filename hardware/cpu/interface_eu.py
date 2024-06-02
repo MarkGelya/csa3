@@ -21,6 +21,9 @@ class InterfaceEU(CustomFSM):
         self.cmd = None
         self.alu = ALU32()
 
+        # Flags
+        self.flag_eof = False
+
         # Input buses
         self.bus_instr = Bus(8)
         self.bus_data1 = Bus(8)

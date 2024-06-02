@@ -53,6 +53,7 @@ class InstructionAddr(Instruction):
 
     def phaseStart(self):
         if self.eu.wire_addr_ready.is_high():
+            self.eu.alu.set_b(0)
             self.eu.wire_operand.set_high()
             if self.op_code & IsaMasks.final_addr:
                 self.eu.wire_indirect_addr.set_high()
@@ -60,7 +61,6 @@ class InstructionAddr(Instruction):
             else:
                 self.eu.wire_direct_addr.set_high()
                 self.set_state(InstructionAddr.stateLoadOperand0)
-                self.eu.alu.set_b(0)
         return False
 
     # Если в InstructionQueue находится адрес, то передать BIU команду о выборке операнда
@@ -368,6 +368,16 @@ class JLE(InstructionJump):
             return True
         return False
 
+class JEOF(InstructionJump):
+    def phaseStart(self):
+        if self.eu.wire_addr_ready.is_high():
+            if self.eu.flag_eof:
+                self.eu.flag_eof = False
+                self.eu.wire_jump.set_high()
+                self.is_jumped = True
+            return True
+        return False
+
 class IN(InstructionPort):
     stateStart = State('Start')
     stateExec0 = State('Exec0')
@@ -492,6 +502,7 @@ isa = {
     0b100_0100_0:  JGE,
     0b100_0101_0:  JL,
     0b100_0110_0:  JLE,
+    0b100_0111_0:  JLE,
 
     0b101_00000:   IN,
     0b110_00000:   OUT,

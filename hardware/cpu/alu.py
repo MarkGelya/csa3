@@ -48,7 +48,6 @@ class ALU32:
         self.flags_CF = carry
         self.flags_OF = c ^ carry
         self.flags_NF = result[len(self.__A) - 1]
-        print(result[len(self.__A) - 1])
         self.flags_ZF = 1 if result.getInt() == 0 else 0
         return result.getInt()
 

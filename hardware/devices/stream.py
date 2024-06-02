@@ -3,17 +3,23 @@ from hardware.base.wire import Wire
 
 
 class Stream:
-    def __init__(self):
+    def __init__(self, filename):
         self.counter = 0
         self.tick_on_work = 6
         self.is_work = False
         # self.addr = 0
         self.data = 0
         # self.addr_enable = False
-        self.data_enable = False
         self.read = False
-        self.buff = bytearray(255)
-        self.pointer = 0
+
+        # Flags
+        self.eof = False
+
+        # From stream to device
+        self.output_pointer = 0
+        self.output_buff = bytearray([0])
+        with open(filename, mode="rb") as f:
+            self.output_buff = f.read()
 
         # Input/Output
         self.bus_data = Bus(8)
@@ -24,41 +30,29 @@ class Stream:
         # Input
         self.wire_data_enable = Wire(default=Wire.low_level)
         self.wire_read = Wire(default=Wire.low_level)
-        self.wire_mem = Wire(default=Wire.low_level)
 
     def tick(self):
+        self.bus_data.tick()
+        self.wire_ready.tick()
+        self.wire_data_enable.tick()
+        self.wire_read.tick()
         if self.is_work:
             if self.counter >= self.tick_on_work:
                 if self.read:
-                    self.bus_data.set_value(self.buff[self.pointer % 256])
-                    self.pointer += 1
+                    if self.output_pointer <= len(self.output_buff):
+                        self.bus_data.set_value(self.output_buff[self.output_pointer])
+                        self.output_pointer += 1
+                    else:
+                        self.eof = True
                 else:
-                    self.buff[self.pointer % 256] = self.bus_data.get_value()
-                    self.pointer += 1
-                    print(self.data)
-                self.wire_ready.set_high()
-                self.counter = 0
-                self.is_work = False
-                # self.addr_enable = False
-                self.data_enable = False
+                    print(str(bytes([self.data]))[2:-1])
             else:
                 self.counter += 1
         else:
-            # if self.wire_addr_enable.is_high():
-            #     self.addr = self.bus_addr.get_value()
-            #     self.addr_enable = True
             if self.wire_data_enable.is_high():
                 self.data = self.bus_data.get_value()
-                self.data_enable = True
                 self.read = self.wire_read.is_high()
-            self.is_work = self.data_enable
-
-    def input(self):
-        s = input()
-        self.buff = (bytearray([len(s)]) if len(s) < 256 else bytearray([0xFF])) + s.encode('ASCII')[:255]
-
-    def output(self):
-        print(self.buff[1:self.buff[0]].decode('ASCII'))
+                self.is_work = True
 
     def __str__(self):
         return f'''addr enable: {self.wire_data_enable}
