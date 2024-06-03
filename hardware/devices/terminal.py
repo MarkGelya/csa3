@@ -45,6 +45,8 @@ class Terminal:
                 if self.read:
                     if (self.output_pointer > self.output_buff[0]) or (self.output_buff[0] == 0):
                         self.input()
+                    elif self.output_pointer == 0:
+                        print(f'< {self.output_buff.decode('ASCII')}')
                     self.bus_data.set_value(self.output_buff[self.output_pointer % 256])
                     self.output_pointer += 1
                 else:
@@ -52,7 +54,8 @@ class Terminal:
                     if self.input_pointer >= self.input_buff[0]:
                         self.print()
                         self.input_pointer = 0
-                    self.input_pointer += 1
+                    else:
+                        self.input_pointer += 1
                 self.wire_ready.set_high()
                 self.counter = 0
                 self.is_work = False
@@ -79,7 +82,7 @@ class Terminal:
         self.output_buff = (bytearray([len(data)]) if len(data) < 256 else bytearray([0xFF])) + data[:256]
 
     def print(self):
-        print(f"> {self.input_buff[0:self.input_buff[0]+1].decode('ASCII')}")
+        print(f"> {self.input_buff[1:self.input_buff[0]+1].decode('ASCII')}")
 
     def __str__(self):
         return f'''addr enable: {self.wire_data_enable}

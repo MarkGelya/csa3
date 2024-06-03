@@ -39,13 +39,16 @@ class Stream:
         if self.is_work:
             if self.counter >= self.tick_on_work:
                 if self.read:
-                    if self.output_pointer <= len(self.output_buff):
+                    if self.output_pointer < len(self.output_buff):
                         self.bus_data.set_value(self.output_buff[self.output_pointer])
                         self.output_pointer += 1
                     else:
                         self.eof = True
                 else:
                     print(str(bytes([self.data]))[2:-1])
+                self.wire_ready.set_high()
+                self.counter = 0
+                self.is_work = False
             else:
                 self.counter += 1
         else:

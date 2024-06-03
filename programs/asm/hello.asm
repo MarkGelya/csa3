@@ -1,5 +1,5 @@
         JMP     start
-hello:  BYTES   "hello"
+hello:  BYTES   "Hello, world!"
 ptr0:   SHORT   hello
 ptr:    SHORT   hello
 i:      SHORT   0

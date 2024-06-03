@@ -22,7 +22,6 @@ class Bcomp:
         self.wire_mem = self.cpu.wire_mem
         # self.wire_instr = self.cpu.wire_instr
 
-
     def tick(self):
         # _/¯
         self.cpu.tickUp()
@@ -54,15 +53,16 @@ class Bcomp:
                     self.terminal.bus_data.set_value(self.bus_data.get_value())
                 if self.terminal.wire_ready.is_high():
                     self.cpu.wire_ready.set_high()
-            # elif self.cpu.bus_addr.get_value() == 0x0001:
-            #     self.stream.wire_data_enable.set_level(self.cpu.wire_data_enable.get_value())
-            #     self.stream.wire_read.set_level(self.cpu.wire_read.get_value())
-            #     if self.cpu.wire_read.is_high():
-            #         self.bus_data.set_value(self.stream.bus_data.get_value())
-            #     else:
-            #         self.stream.bus_data.set_value(self.bus_data.get_value())
-            #     if self.stream.wire_ready.is_high():
-            #         self.cpu.wire_ready.set_high()
+            elif self.cpu.bus_addr.get_value() == 0x0001:
+                self.stream.wire_data_enable.set_level(self.cpu.wire_data_enable.get_value())
+                self.stream.wire_read.set_level(self.cpu.wire_read.get_value())
+                if self.cpu.wire_read.is_high():
+                    self.bus_data.set_value(self.stream.bus_data.get_value())
+                else:
+                    self.stream.bus_data.set_value(self.bus_data.get_value())
+                if self.stream.wire_ready.is_high():
+                    self.cpu.wire_ready.set_high()
+                self.cpu.eu.flag_eof = self.stream.eof
 
         self.terminal.tick()
         self.stream.tick()

@@ -22,7 +22,11 @@ def main(code_filename: str, input_filename: str):
     f.close()
     bcomp = Bcomp(input_filename)
     loadProgram(bcomp.mem, data)
-    bcomp.run()
+    try:
+        bcomp.run()
+    except:
+        print('lim')
+
 
 if __name__ == '__main__':
     main(sys.argv[1], sys.argv[2])

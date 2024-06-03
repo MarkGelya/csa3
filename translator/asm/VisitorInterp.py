@@ -60,13 +60,13 @@ class VisitorInterp(MyAssemblerVisitor):
     def visitInteger(self, ctx:MyAssemblerParser.IntegerContext):
         if ctx.DEC_INTEGER() is not None:
             # print("Operand (decimal_integer):", ctx.DEC_INTEGER().getText())
-            return int(ctx.DEC_INTEGER().getText());
+            return int(ctx.DEC_INTEGER().getText())
         elif ctx.HEX_INTEGER() is not None:
             # print("Operand (hex_integer):", ctx.HEX_INTEGER().getText())
-            return int(ctx.HEX_INTEGER().getText(), 16);
+            return int(ctx.HEX_INTEGER().getText(), 16)
         elif ctx.OCT_INTEGER() is not None:
             # print("Operand (oct_integer):", ctx.OCT_INTEGER().getText())
-            return int(ctx.OCT_INTEGER().getText(), 8);
+            return int(ctx.OCT_INTEGER().getText(), 8)
         elif ctx.BIN_INTEGER() is not None:
             # print("Operand (bin_integer):", ctx.BIN_INTEGER().getText())
-            return int(ctx.BIN_INTEGER().getText(), 2);
+            return int(ctx.BIN_INTEGER().getText(), 2)

@@ -163,6 +163,8 @@ class ByteFetchMng(CustomFSM):
         # self.biu.DR.setInt(self.biu.memory.read())
         self.biu.wire_MEM.set_level(self.biu.mem)
         self.biu.wire_READ.set_level(self.biu.read)
+        if not self.biu.mem:
+            self.biu.bus_addr.set_value(self.biu.bus_addr1.get_value())
         if self.biu.wire_ready.is_high():
             if self.biu.read:
                 self.biu.DR.setInt(self.biu.bus_data.get_value())

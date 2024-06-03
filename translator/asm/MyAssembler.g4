@@ -56,6 +56,7 @@ op2
     | 'JGE'
     | 'JL'
     | 'JLE'
+    | 'JEOF'
     ;
 op3
     : 'IN'
@@ -91,7 +92,10 @@ integer
     | OCT_INTEGER
     | BIN_INTEGER
     ;
-string: '"' ( ESCAPED_CHAR | ~('\\'|'"') )* '"';
+
+string: StringVar;
+
+StringVar: '"' (~["\\\r\n] | ESCAPED_CHAR)+ '"';
 
 ESCAPED_CHAR: '\\' ( 'n' | 'r' | 't' | '"' | '\\' );
 DEC_INTEGER: [0-9]+;
