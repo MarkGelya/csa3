@@ -1,16 +1,17 @@
 JMP     start
-a:      WORD    1
+a:      WORD    0
 b:      WORD    1
 buff:   WORD    0
-i:      WORD    0
-n:      WORD    20
-term:   WORD    0
-ascii0: WORD    0x30
+res:
+res0:   BYTE    0
+res1:   BYTE    0
+res2:   BYTE    0
+res3:   BYTE    0
+mask:   WORD    0x1
+max:    WORD    50
+
 start:
 loop:
-;        LD      a
-;        ADD     ascii0
-;        OUT     1
         LD      a
         ADD     b
 ; a -> buff, b -> a, buff -> a
@@ -20,12 +21,34 @@ loop:
         LD      buff
         ST      b
 
-        LD      i
-        INC
-        CMP     n
+        CMP     max
         JGE     end
-        ST      i
+
+        AND     mask
+        JNZ     loop
+
+        ST      res
+        LD      res0    b8
+        OUT     10
+        LD      res1    b8
+        OUT     10
+        LD      res2    b8
+        OUT     10
+        LD      res3    b8
+        OUT     10
+
+        LD      b
+        ADD     res
+        ST      res
+
         JMP     loop
 end:
-;        OUT     2
+        LD      res0    b8
+        OUT     10
+        LD      res1    b8
+        OUT     10
+        LD      res2    b8
+        OUT     10
+        LD      res3    b8
+        OUT     10
         HLT

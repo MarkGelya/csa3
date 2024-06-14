@@ -1,4 +1,5 @@
 from hardware.cpu.cpu import CPU
+from hardware.devices.decimal_output import DecimalOutput
 from hardware.devices.stream import Stream
 from hardware.devices.terminal import Terminal
 from hardware.memory.memory import Memory
@@ -12,6 +13,7 @@ class Bcomp:
         self.tick_num = 0
         self.terminal = Terminal(self.filename)
         self.stream = Stream(self.filename)
+        self.decimal_output = DecimalOutput()
 
         self.bus_data = self.cpu.bus_data
         self.bus_addr = self.cpu.bus_addr
@@ -63,9 +65,17 @@ class Bcomp:
                 if self.stream.wire_ready.is_high():
                     self.cpu.wire_ready.set_high()
                 self.cpu.eu.flag_eof = self.stream.eof
+            elif self.cpu.bus_addr.get_value() == 0x000a:
+                self.decimal_output.wire_data_enable.set_level(self.cpu.wire_data_enable.get_value())
+                self.decimal_output.wire_read.set_level(self.cpu.wire_read.get_value())
+                if self.cpu.wire_read.is_low():
+                    self.decimal_output.bus_data.set_value(self.bus_data.get_value())
+                if self.decimal_output.wire_ready.is_high():
+                    self.cpu.wire_ready.set_high()
 
         self.terminal.tick()
         self.stream.tick()
+        self.decimal_output.tick()
 
         # ¯\_
         self.cpu.tickDown()
