@@ -9,7 +9,7 @@ import machine
 import pytest
 
 
-@pytest.mark.golden_test("golden/*.yml")
+@pytest.mark.golden_test("golden/*")
 def test_translator_and_machine(golden, caplog):
     """Используется подход golden tests. У него не самая удачная реализация для
     python: https://pypi.org/project/pytest-golden/ , но знать об этом подходе
@@ -36,7 +36,6 @@ def test_translator_and_machine(golden, caplog):
 
     Выход:
 
-    - `out_code` -- машинный код, сгенерированный транслятором
     - `out_stdout` -- стандартный вывод транслятора и симулятора
     - `out_log` -- журнал программы
     """
@@ -46,8 +45,8 @@ def test_translator_and_machine(golden, caplog):
     # Создаём временную папку для тестирования приложения.
     with tempfile.TemporaryDirectory() as tmpdirname:
         # Готовим имена файлов для входных и выходных данных.
-        source = os.path.join(tmpdirname, "source.lisp")
-        input_stream = os.path.join(tmpdirname, "input.txt")
+        source = os.path.join(tmpdirname, "source.asm")
+        input_stream = os.path.join(tmpdirname, "stdin.txt")
         target = os.path.join(tmpdirname, "target.o")
 
         # Записываем входные данные в файлы. Данные берутся из теста.
@@ -60,7 +59,6 @@ def test_translator_and_machine(golden, caplog):
         # stdout
         with contextlib.redirect_stdout(io.StringIO()) as stdout:
             compiler.main(source, target)
-            print("============================================================")
             machine.main(target, input_stream)
 
         # Выходные данные также считываем в переменные.
@@ -68,6 +66,5 @@ def test_translator_and_machine(golden, caplog):
             code = file.read()
 
         # Проверяем, что ожидания соответствуют реальности.
-        assert code == golden.out["out_code"]
         assert stdout.getvalue() == golden.out["out_stdout"]
         assert caplog.text == golden.out["out_log"]

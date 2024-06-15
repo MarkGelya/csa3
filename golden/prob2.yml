@@ -1,0 +1,51 @@
+in_source: |
+  ; prob2
+          JMP     start
+  a:      WORD    0
+  b:      WORD    1
+  buff:   WORD    0
+  res:
+  res0:   BYTE    0
+  res1:   BYTE    0
+  res2:   BYTE    0
+  res3:   BYTE    0
+  mask:   WORD    0x1
+  max:    WORD    4000000
+  
+  start:
+  loop:
+          LD      a
+          ADD     b
+  ; a -> buff, b -> a, buff -> a
+          ST      buff
+          LD      b
+          ST      a
+          LD      buff
+          ST      b
+  
+          CMP     max
+          JGE     end
+  
+          AND     mask
+          JNZ     loop
+  
+          LD      b
+          ADD     res
+          ST      res
+  
+          JMP     loop
+  end:
+          LD      res0    b8
+          OUT     10
+          LD      res1    b8
+          OUT     10
+          LD      res2    b8
+          OUT     10
+          LD      res3    b8
+          OUT     10
+          HLT
+
+
+in_stdin: ''
+out_log: ''
+out_stdout: "> 4613732\n"

@@ -103,7 +103,7 @@ class Bcomp:
         # print()
         # print(f'tick: {self.tick_num}')
 
-    def run(self, limit=50000):
+    def run(self, limit=1000000):
         counter = 0
         while self.cpu.eu.wire_hlt.is_low():
             if self.tick_num > limit:

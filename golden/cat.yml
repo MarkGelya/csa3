@@ -1,0 +1,16 @@
+in_source: |
+  ; cat
+          JMP     start
+  start:
+  loop:
+          IN      1
+          JEOF    end
+          OUT     1
+          JMP     loop
+  end:
+          HLT
+
+
+in_stdin: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras non elit iaculis, fringilla massa in, lacinia tellus. Praesent eu enim in leo hendrerit faucibus id in felis. In venenatis dui at sollicitudin euismod.'
+out_log: ''
+out_stdout: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras non elit iaculis, fringilla massa in, lacinia tellus. Praesent eu enim in leo hendrerit faucibus id in felis. In venenatis dui at sollicitudin euismod.'

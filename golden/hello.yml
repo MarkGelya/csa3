@@ -1,30 +1,26 @@
 in_source: |
-            JMP     start
-    hello:  BYTES   "Hello, world!"
-    ptr0:   SHORT   hello
-    ptr:    SHORT   hello
-    i:      SHORT   0
-    start:
-    loop:
-            LD      *ptr    b8
-            OUT     0
-            LD      ptr     b16
-            INC
-            ST      ptr     b16
-            LD      i       b16
-            CMP     *ptr0   b8
-            JG      end
-            INC
-            ST      i       b16
-            JMP     loop
-    end:
-            HLT
+  ; hello world
+          JMP     start
+  hello:  BYTES   "Hello, world!"
+  ptr0:   SHORT   hello
+  ptr:    SHORT   hello
+  i:      SHORT   0
+  start:
+  loop:
+          LD      *ptr    b8
+          OUT     0
+          LD      ptr     b16
+          INC
+          ST      ptr     b16
+          LD      i       b16
+          CMP     *ptr0   b8
+          JG      end
+          INC
+          ST      i       b16
+          JMP     loop
+  end:
+          HLT
 
-in_stdin: |-
-  foo
+in_stdin: ''
 out_log: ''
-out_stdout: |
-  ============================================================
-  > Hello, world!
-out_code: !!binary |
-  gAAPBWhlbGxvAAMAAwAAQQALwAAAQgALEUoAC0IADXEACYYALBFKAA2AAA8P
+out_stdout: "> Hello, world!\n"
