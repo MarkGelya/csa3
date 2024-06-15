@@ -46,7 +46,7 @@ class Terminal:
                     if (self.output_pointer > self.output_buff[0]) or (self.output_buff[0] == 0):
                         self.input()
                     elif self.output_pointer == 0:
-                        print(f'< {self.output_buff.decode('ASCII')}')
+                        print(f'< {self.output_buff[1:self.output_buff[0]+1].decode('ASCII')}')
                     self.bus_data.set_value(self.output_buff[self.output_pointer % 256])
                     self.output_pointer += 1
                 else:
