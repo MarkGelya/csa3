@@ -45,7 +45,7 @@ class Stream:
                     else:
                         self.eof = True
                 else:
-                    print(str(bytes([self.data]))[2:-1])
+                    print(str(bytes([self.data]))[2:-1], end='')
                 self.wire_ready.set_high()
                 self.counter = 0
                 self.is_work = False
