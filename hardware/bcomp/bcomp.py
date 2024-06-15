@@ -1,8 +1,12 @@
+import logging
+
 from hardware.cpu.cpu import CPU
 from hardware.devices.decimal_output import DecimalOutput
 from hardware.devices.stream import Stream
 from hardware.devices.terminal import Terminal
 from hardware.memory.memory import Memory
+
+logger = logging.getLogger(__name__)
 
 class Bcomp:
     def __init__(self, input_filename):
@@ -90,8 +94,13 @@ class Bcomp:
 
     def instr(self):
         self.tick()
+        if self.cpu.eu.wire_hlt.is_high():
+            return
         while self.cpu.eu.wire_instr.is_low():
             self.tick()
+            if self.cpu.eu.wire_hlt.is_high():
+                return
+
         self.instr_num += 1
         # print(self.cpu.eu.alu)
         # print()
@@ -108,4 +117,11 @@ class Bcomp:
         while self.cpu.eu.wire_hlt.is_low():
             if self.tick_num > limit:
                 raise ValueError(f'Tick limit {self.tick_num}')
-            self.tick()
+            self.instr()
+
+            logger.info('\n'+str(self.cpu.eu)+'\n'+str(self.cpu.eu.alu))
+            # print(self.cpu.eu)
+            # print(self.cpu.eu.alu)
+            if self.cpu.eu.wire_hlt.is_high():
+                break
+

@@ -6,18 +6,8 @@ from hardware.cpu.instr_queue import InstructionQueue
 from hardware.cpu.interface_eu import InterfaceEU
 import logging
 
-logger = logging.getLogger(__name__)
-
 class CPU:
     def __init__(self):
-        logging.basicConfig(
-            level=logging.DEBUG,
-        )
-        loggers = ['transitions.core', 'asyncio']
-
-        for i in loggers:
-            logging.getLogger(i).setLevel(logging.ERROR)
-
         self.tick_num = 0
         self.instr_num = 0
 
