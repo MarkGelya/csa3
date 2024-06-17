@@ -1,10 +1,7 @@
-from hardware.cpu.alu import ALU32
-from hardware.cpu.eu import EU
-from hardware.cpu.biu import *
+from hardware.cpu.biu import BIU
 from hardware.cpu.eu import EU
 from hardware.cpu.instr_queue import InstructionQueue
-from hardware.cpu.interface_eu import InterfaceEU
-import logging
+
 
 class CPU:
     def __init__(self):
@@ -49,40 +46,40 @@ class CPU:
         self.iq.bus_data = self.biu.bus_data1
 
         self.wires = {
-            'operand': self.eu.wire_operand,
-            'direct addr': self.eu.wire_direct_addr,
-            'indirect addr': self.eu.wire_indirect_addr,
-            'bit depth0': self.eu.wire_bit_depth0,
-            'bit depth1': self.eu.wire_bit_depth1,
-            'jump': self.eu.wire_jump,
-            'drop': self.eu.wire_drop,
-            'skip': self.eu.wire_skip,
-            'skip addr': self.eu.wire_skip_addr,
-            'read': self.eu.wire_read,
-            'mem': self.eu.wire_mem,
-            'hlt': self.eu.wire_hlt,
-            'run': self.eu.wire_run,
-            'instr': self.eu.wire_instr,
-            'operand fetched': self.biu.wire_operand_fetched,
-            'instr fetched': self.biu.wire_instr_fetched,
-            'biu is wait': self.biu.wire_is_wait,
-            'output enable': self.biu.wire_output_enable,
-            'instr ready': self.iq.wire_instr_ready,
-            'addr ready': self.iq.wire_addr_ready,
-            'writable': self.iq.wire_writable,
-            'DEN': self.biu.wire_data_enable,
-            'READY': self.biu.wire_ready,
-            'MEM': self.wire_mem,
-            'READ': self.wire_read,
+            "operand": self.eu.wire_operand,
+            "direct addr": self.eu.wire_direct_addr,
+            "indirect addr": self.eu.wire_indirect_addr,
+            "bit depth0": self.eu.wire_bit_depth0,
+            "bit depth1": self.eu.wire_bit_depth1,
+            "jump": self.eu.wire_jump,
+            "drop": self.eu.wire_drop,
+            "skip": self.eu.wire_skip,
+            "skip addr": self.eu.wire_skip_addr,
+            "read": self.eu.wire_read,
+            "mem": self.eu.wire_mem,
+            "hlt": self.eu.wire_hlt,
+            "run": self.eu.wire_run,
+            "instr": self.eu.wire_instr,
+            "operand fetched": self.biu.wire_operand_fetched,
+            "instr fetched": self.biu.wire_instr_fetched,
+            "biu is wait": self.biu.wire_is_wait,
+            "output enable": self.biu.wire_output_enable,
+            "instr ready": self.iq.wire_instr_ready,
+            "addr ready": self.iq.wire_addr_ready,
+            "writable": self.iq.wire_writable,
+            "DEN": self.biu.wire_data_enable,
+            "READY": self.biu.wire_ready,
+            "MEM": self.wire_mem,
+            "READ": self.wire_read,
         }
 
         self.buses = {
-            'data1 ': self.biu.bus_data1,
-            'data2': self.biu.bus_data2,
-            'instr': self.iq.bus_instr,
-            'addr1 ': self.iq.bus_addr1,
-            'DATA ': self.biu.bus_data,
-            'ADDR ': self.biu.bus_addr,
+            "data1 ": self.biu.bus_data1,
+            "data2": self.biu.bus_data2,
+            "instr": self.iq.bus_instr,
+            "addr1 ": self.iq.bus_addr1,
+            "DATA ": self.biu.bus_data,
+            "ADDR ": self.biu.bus_addr,
         }
 
     def tickWires(self):
@@ -97,13 +94,13 @@ class CPU:
         res = list()
         for key, value in self.wires.items():
             res.append(f"{key.ljust(15)}: {value}")
-        print('\n'.join(res))
+        print("\n".join(res))
 
     def printBuses(self):
         res = list()
         for key, value in self.buses.items():
             res.append(f"{key}: {value}")
-        print('\n'.join(res))
+        print("\n".join(res))
 
     # _/¯
     def tickUp(self):
@@ -133,13 +130,11 @@ class CPU:
         # logger.info(f'instructions: {self.instr_num}, ticks: {self.tick_num}')
 
     def run_instr(self, limit=50000):
-        counter = 0
         # logger.info(
         #     f'\n        ALU:\n{self.eu.alu}\n        EU:\n{self.eu}\n        IQ:\n{self.iq}\n        BIU:\n{self.biu}'
         # )
         # logger.info(f'instructions: {self.instr_num}, ticks: {self.tick_num}')
         while self.eu.wire_hlt.is_low():
             if self.tick_num > limit:
-                raise ValueError(f'Tick limit {self.tick_num}')
+                raise ValueError(f"Tick limit {self.tick_num}")
             self.tick()
-

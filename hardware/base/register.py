@@ -1,4 +1,4 @@
-from utils.formatters import *
+from utils.formatters import bin_to_str
 
 
 class Register:
@@ -9,7 +9,7 @@ class Register:
 
     def __setitem__(self, index, value):
         if index < self._size:
-            self._value |= (value << index)
+            self._value |= value << index
         else:
             raise IndexError(f"Bit index '{index}' out of range '{self._size}'.")
 
@@ -23,22 +23,22 @@ class Register:
         return self._size
 
     def __str__(self):
-        return binToStr(self.getInt(), len(self))
+        return bin_to_str(self.get_int(), len(self))
 
     def __add__(self, other):
         self._value = (self._value + other) & self.mask
         return self
 
-    def setInt(self, value):
+    def set_int(self, value):
         if isinstance(value, int):
             if value < 0:
                 self._value = (abs(value) ^ self.mask) + 1
             else:
                 self._value = value
         elif isinstance(value, Register):
-            self.setInt(value.getInt())
+            self.set_int(value.get_int())
         else:
             raise ValueError("Except 'int' or 'Register'")
 
-    def getInt(self):
+    def get_int(self):
         return self._value

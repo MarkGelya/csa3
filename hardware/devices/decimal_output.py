@@ -55,9 +55,9 @@ class DecimalOutput:
         print(f"> {int.from_bytes(self.input_buff)}")
 
     def __str__(self):
-        return f'''addr enable: {self.wire_data_enable}
+        return f"""addr enable: {self.wire_data_enable}
 read       : {self.wire_read}
 mem        : {self.wire_mem}
 ready      : {self.wire_ready}
 bus data   : {self.bus_data}
-'''
+"""

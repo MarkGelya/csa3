@@ -46,7 +46,7 @@ class Terminal:
                     if (self.output_pointer > self.output_buff[0]) or (self.output_buff[0] == 0):
                         self.input()
                     elif self.output_pointer == 0:
-                        print(f'< {self.output_buff[1:self.output_buff[0]+1].decode('ASCII')}')
+                        print(f"< {self.output_buff[1:self.output_buff[0]+1].decode('ASCII')}")
                     self.bus_data.set_value(self.output_buff[self.output_pointer % 256])
                     self.output_pointer += 1
                 else:
@@ -71,12 +71,12 @@ class Terminal:
                 self.is_work = True
 
     def input(self):
-        s = input('< ')
+        s = input("< ")
         self.output_pointer = 0
-        self.output_buff = (bytearray([len(s)]) if len(s) < 256 else bytearray([0xFF])) + s.encode('ASCII')[:256]
+        self.output_buff = (bytearray([len(s)]) if len(s) < 256 else bytearray([0xFF])) + s.encode("ASCII")[:256]
 
     def input_from_file(self, filename):
-        f = open(filename, 'rb')
+        f = open(filename, "rb")
         data = f.read()
         f.close()
         self.output_buff = (bytearray([len(data)]) if len(data) < 256 else bytearray([0xFF])) + data[:256]
@@ -85,9 +85,9 @@ class Terminal:
         print(f"> {self.input_buff[1:self.input_buff[0]+1].decode('ASCII')}")
 
     def __str__(self):
-        return f'''addr enable: {self.wire_data_enable}
+        return f"""addr enable: {self.wire_data_enable}
 read       : {self.wire_read}
 mem        : {self.wire_mem}
 ready      : {self.wire_ready}
 bus data   : {self.bus_data}
-'''
+"""

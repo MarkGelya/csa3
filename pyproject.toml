@@ -90,13 +90,23 @@ ignore = [
     # to simplify code for non-Python programmers
     "PTH118", # `os.path.join()` should be replaced by `Path` with `/` operator
     "UP032",  # [*] Use f-string instead of `format` call
-
-
+    "N802", # assembler command and wire name
+    "N815", # reflection in transitions (lib for FSM)
+    "INP001", # antlr4
+    "F405", # antlr4
+    "N803", # antlr4
+    "YTT203", # antlr4
+    "UP009", # antlr4
+    "I001", # antlr4
+    "F403", # antlr4
+    "A002", # antlr4
+    "N801", # antlr4
+    "F401", # antlr4
 ]
 unfixable = [
     "ERA001", # prohibit to "auto-fix" (=remove) commented-out code
 ]
-src = ["src"]
+src = ["."]
 
 [tool.ruff.mccabe]
 max-complexity = 7

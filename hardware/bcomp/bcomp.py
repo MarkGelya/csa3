@@ -8,6 +8,7 @@ from hardware.memory.memory import Memory
 
 logger = logging.getLogger(__name__)
 
+
 class Bcomp:
     def __init__(self, input_filename):
         self.filename = input_filename
@@ -69,7 +70,7 @@ class Bcomp:
                 if self.stream.wire_ready.is_high():
                     self.cpu.wire_ready.set_high()
                 self.cpu.eu.flag_eof = self.stream.eof
-            elif self.cpu.bus_addr.get_value() == 0x000a:
+            elif self.cpu.bus_addr.get_value() == 0x000A:
                 self.decimal_output.wire_data_enable.set_level(self.cpu.wire_data_enable.get_value())
                 self.decimal_output.wire_read.set_level(self.cpu.wire_read.get_value())
                 if self.cpu.wire_read.is_low():
@@ -113,15 +114,13 @@ class Bcomp:
         # print(f'tick: {self.tick_num}')
 
     def run(self, limit=1000000):
-        counter = 0
         while self.cpu.eu.wire_hlt.is_low():
             if self.tick_num > limit:
-                raise ValueError(f'Tick limit {self.tick_num}')
+                raise ValueError(f"Tick limit {self.tick_num}")
             self.instr()
 
-            logger.info('\n'+str(self.cpu.eu)+'\n'+str(self.cpu.eu.alu))
+            logger.info("\n" + str(self.cpu.eu) + "\n" + str(self.cpu.eu.alu))
             # print(self.cpu.eu)
             # print(self.cpu.eu.alu)
             if self.cpu.eu.wire_hlt.is_high():
                 break
-

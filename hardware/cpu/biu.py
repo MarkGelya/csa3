@@ -5,14 +5,15 @@ from transitions import State
 from hardware.base.bus import Bus
 from hardware.base.register import Register
 from hardware.base.wire import Wire
-from hardware.memory.memory import Memory
 from hardware.utils.customFSM import CustomFSM
 
 logger = logging.getLogger(__name__)
+
+
 class BIU(CustomFSM):
-    stateWait = State('Wait')
-    stateByteFetch = State('ByteFetch')
-    stateAddrFetch = State('AddrFetch')
+    stateWait = State("Wait")
+    stateByteFetch = State("ByteFetch")
+    stateAddrFetch = State("AddrFetch")
     states = [
         stateWait,
         stateByteFetch,
@@ -72,7 +73,7 @@ class BIU(CustomFSM):
         self.__bfm.to_start()
         self.__afm.to_start()
         if self.wire_jump.is_high():
-            self.IP.setInt(self.bus_addr1.get_value())
+            self.IP.set_int(self.bus_addr1.get_value())
             self.set_state(self.stateByteFetch)
             self.operand = False
             self.read = True
@@ -89,7 +90,7 @@ class BIU(CustomFSM):
 
     def phaseByteFetch(self):
         if self.wire_jump.is_high():
-            self.IP.setInt(self.bus_addr1.get_value())
+            self.IP.set_int(self.bus_addr1.get_value())
             self.set_state(self.stateWait)
         else:
             self.__bfm.tick()
@@ -97,7 +98,7 @@ class BIU(CustomFSM):
 
     def phaseAddrFetch(self):
         if self.wire_jump.is_high():
-            self.IP.setInt(self.bus_addr1.get_value())
+            self.IP.set_int(self.bus_addr1.get_value())
             self.set_state(self.stateWait)
         else:
             self.__afm.tick()
@@ -108,28 +109,28 @@ class BIU(CustomFSM):
         return False
 
     def stateToStr(self):
-        state = ''
+        state = ""
         if self.state == BIU.stateByteFetch.name:
-            state = f'/{self.__bfm.state}'
+            state = f"/{self.__bfm.state}"
         elif self.state == BIU.stateAddrFetch.name:
-            state = f'/{self.__afm.state}'
-        return f'State: {self.state}{state}'
+            state = f"/{self.__afm.state}"
+        return f"State: {self.state}{state}"
 
     def __str__(self):
-        state = ''
+        state = ""
         if self.state == BIU.stateByteFetch.name:
-            state = f'/{self.__bfm.state}'
+            state = f"/{self.__bfm.state}"
         elif self.state == BIU.stateAddrFetch.name:
-            state = f'/{self.__afm.state}'
-        return f'''State: {self.state}{state}
+            state = f"/{self.__afm.state}"
+        return f"""State: {self.state}{state}
 IP:  {self.IP}
 FAR: {self.FAR}
-DR:  {self.DR}'''
+DR:  {self.DR}"""
 
 
 class ByteFetchMng(CustomFSM):
-    state0 = State('State0')
-    state1 = State('State1')
+    state0 = State("State0")
+    state1 = State("State1")
     states = [
         state0,
         state1,
@@ -141,7 +142,9 @@ class ByteFetchMng(CustomFSM):
         self.DR = Register(32)
 
     def phaseState0(self):
-        bias = (0b00 if self.biu.wire_bit_depth0.is_low() else 0b01) | (0b00 if self.biu.wire_bit_depth1.is_low() else 0b10)
+        bias = (0b00 if self.biu.wire_bit_depth0.is_low() else 0b01) | (
+            0b00 if self.biu.wire_bit_depth1.is_low() else 0b10
+        )
         self.biu.wire_data_enable.set_high()
         self.biu.wire_MEM.set_level(self.biu.mem)
         self.biu.wire_READ.set_level(self.biu.read)
@@ -150,13 +153,13 @@ class ByteFetchMng(CustomFSM):
             if self.biu.wire_direct_addr.is_high():
                 self.biu.bus_addr.set_value(self.biu.bus_addr1.get_value() + bias)
             elif self.biu.wire_indirect_addr.is_high():
-                self.biu.bus_addr.set_value(self.biu.FAR.getInt() + bias)
+                self.biu.bus_addr.set_value(self.biu.FAR.get_int() + bias)
         else:
-            self.biu.bus_addr.set_value(self.biu.IP.getInt())
+            self.biu.bus_addr.set_value(self.biu.IP.get_int())
 
         if not self.biu.read:
-            self.biu.DR.setInt(self.biu.bus_data2.get_value())
-            self.biu.bus_data.set_value(self.biu.DR.getInt())
+            self.biu.DR.set_int(self.biu.bus_data2.get_value())
+            self.biu.bus_data.set_value(self.biu.DR.get_int())
         return True
 
     def phaseState1(self):
@@ -167,8 +170,8 @@ class ByteFetchMng(CustomFSM):
             self.biu.bus_addr.set_value(self.biu.bus_addr1.get_value())
         if self.biu.wire_ready.is_high():
             if self.biu.read:
-                self.biu.DR.setInt(self.biu.bus_data.get_value())
-                self.biu.bus_data1.set_value(self.biu.DR.getInt())
+                self.biu.DR.set_int(self.biu.bus_data.get_value())
+                self.biu.bus_data1.set_value(self.biu.DR.get_int())
                 if not self.biu.operand:
                     self.biu.wire_instr_fetched.set_high()
                     self.biu.IP += 1
@@ -184,11 +187,12 @@ class ByteFetchMng(CustomFSM):
             # self.biu.wire_data_enable.set_high()
         return False
 
+
 class AddrFetchMng(CustomFSM):
-    state0 = State('State0')
-    state1 = State('State1')
-    state2 = State('State2')
-    state3 = State('State3')
+    state0 = State("State0")
+    state1 = State("State1")
+    state2 = State("State2")
+    state3 = State("State3")
     states = [
         state0,
         state1,
@@ -212,8 +216,8 @@ class AddrFetchMng(CustomFSM):
         self.biu.wire_MEM.set_high()
         self.biu.wire_READ.set_high()
         if self.biu.wire_ready.is_high():
-            self.biu.DR.setInt(self.biu.bus_data.get_value())
-            self.biu.FAR.setInt(self.biu.DR.getInt() << 8)
+            self.biu.DR.set_int(self.biu.bus_data.get_value())
+            self.biu.FAR.set_int(self.biu.DR.get_int() << 8)
             self.biu.wire_data_enable.set_high()
             self.biu.bus_addr.set_value(self.biu.bus_addr1.get_value() + 1)
             return True
@@ -224,8 +228,8 @@ class AddrFetchMng(CustomFSM):
         self.biu.wire_MEM.set_high()
         self.biu.wire_READ.set_high()
         if self.biu.wire_ready.is_high():
-            self.biu.DR.setInt(self.biu.bus_data.get_value())
-            self.biu.FAR.setInt(self.biu.FAR.getInt() | self.biu.DR.getInt())
+            self.biu.DR.set_int(self.biu.bus_data.get_value())
+            self.biu.FAR.set_int(self.biu.FAR.get_int() | self.biu.DR.get_int())
             self.biu.wire_is_wait.set_high()
             self.biu.set_state(BIU.stateWait)
         return False

@@ -1,5 +1,6 @@
 from transitions import Machine, State
 
+
 # При написании конечных автоматов для EU и BIU выяснилось, что все
 # они выполняют довольно простые функции, которые можно вынести в отдельный
 # класс. Вот правила:
@@ -13,22 +14,22 @@ from transitions import Machine, State
 class CustomFSM:
     def __init__(self, states: list):
         self.machine = Machine(model=self, states=states, initial=states[0])
-        for i in range(len(states)-1):
+        for i in range(len(states) - 1):
             self.machine.add_transition(
-                trigger='tick',
+                trigger="tick",
                 source=states[i],
-                dest=states[i+1],
-                conditions=f'phase{str(states[i].name)}',
+                dest=states[i + 1],
+                conditions=f"phase{str(states[i].name)}",
             )
         self.machine.add_transition(
-            trigger='tick',
-            source=states[len(states)-1],
+            trigger="tick",
+            source=states[len(states) - 1],
             dest=states[0],
-            conditions=f'phase{str(states[len(states)-1].name)}',
+            conditions=f"phase{str(states[len(states)-1].name)}",
         )
         self.machine.add_transition(
-            trigger='to_start',
-            source='*',
+            trigger="to_start",
+            source="*",
             dest=states[0],
         )
 

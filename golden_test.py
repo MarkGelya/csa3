@@ -61,10 +61,6 @@ def test_translator_and_machine(golden, caplog):
             compiler.main(source, target)
             machine.main(target, input_stream)
 
-        # Выходные данные также считываем в переменные.
-        with open(target, 'rb') as file:
-            code = file.read()
-
         # Проверяем, что ожидания соответствуют реальности.
         assert stdout.getvalue() == golden.out["out_stdout"]
         assert caplog.text == golden.out["out_log"]

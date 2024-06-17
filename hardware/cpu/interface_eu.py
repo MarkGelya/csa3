@@ -1,17 +1,17 @@
 from transitions import State
 
-from hardware.base.register import Register
-from hardware.cpu.alu import ALU32
 from hardware.base.bus import Bus
+from hardware.base.register import Register
 from hardware.base.wire import Wire
+from hardware.cpu.alu import ALU32
 from hardware.utils.customFSM import CustomFSM
 
 
 class InterfaceEU(CustomFSM):
-    stateWait = State('Wait')
-    stateInstrFetch = State('InstructionFetch')
-    stateExecution = State('Execution')
-    stateHlt = State('Hlt')
+    stateWait = State("Wait")
+    stateInstrFetch = State("InstructionFetch")
+    stateExecution = State("Execution")
+    stateHlt = State("Hlt")
     states = [stateWait, stateInstrFetch, stateExecution, stateHlt]
 
     def __init__(self):

@@ -27,7 +27,7 @@ def main(input_filename: str, output_filename: str):
         vinterp.visit(tree)
     code.eof()
     code.compile(output_filename)
-    if '-p' in sys.argv:
+    if "-p" in sys.argv:
         code.print()
 
     # # alg
@@ -48,5 +48,5 @@ def main(input_filename: str, output_filename: str):
     # #     code.print()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2])

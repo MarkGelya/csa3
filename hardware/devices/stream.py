@@ -45,7 +45,7 @@ class Stream:
                     else:
                         self.eof = True
                 else:
-                    print(str(bytes([self.data]))[2:-1], end='')
+                    print(str(bytes([self.data]))[2:-1], end="")
                 self.wire_ready.set_high()
                 self.counter = 0
                 self.is_work = False
@@ -58,9 +58,9 @@ class Stream:
                 self.is_work = True
 
     def __str__(self):
-        return f'''addr enable: {self.wire_data_enable}
+        return f"""addr enable: {self.wire_data_enable}
 read       : {self.wire_read}
 mem        : {self.wire_mem}
 ready      : {self.wire_ready}
 bus data   : {self.bus_data}
-'''
+"""

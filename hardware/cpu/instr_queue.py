@@ -61,23 +61,23 @@ class InstructionQueue:
         # if self.empty():
         #     raise ValueError('Connot read. Queue is empty.')
         res = self.queue[self.read_pointer]
-        return res.getInt()
+        return res.get_int()
 
     def write(self, value):
         if self.full():
-            raise ValueError('Connot write. Queue is full.')
+            raise ValueError("Connot write. Queue is full.")
         self.size += 1
-        if type(value) == int:
-            self.queue[self.write_pointer].setInt(value)
-        elif type(value) == Register:
-            self.queue[self.write_pointer].setInt(value.getInt())
+        if isinstance(value, int):
+            self.queue[self.write_pointer].set_int(value)
+        elif isinstance(value, Register):
+            self.queue[self.write_pointer].set_int(value.get_int())
         else:
             raise TypeError("Expected 'int' or 'Register'.")
         self.write_pointer = (self.write_pointer + 1) % self.maxsize
 
     def skip(self):
         if self.empty():
-            raise ValueError('Connot skip. Queue is empty.')
+            raise ValueError("Connot skip. Queue is empty.")
         self.size -= 1
         self.read_pointer = (self.read_pointer + 1) % self.maxsize
 
@@ -106,11 +106,16 @@ class InstructionQueue:
         # if self.isEmptyAddr():
         #     raise ValueError('Connot read addres.')
         res = Register(16)
-        res.setInt((self.queue[self.read_pointer].getInt() << 8) + self.queue[(self.read_pointer + 1) % self.maxsize].getInt())
-        return res.getInt()
+        res.set_int(
+            (self.queue[self.read_pointer].get_int() << 8)
+            + self.queue[(self.read_pointer + 1) % self.maxsize].get_int()
+        )
+        return res.get_int()
 
     def __str__(self):
         res = list()
         for i in range(self.maxsize):
-            res.append(f" {'<-' if i == self.read_pointer else '  '} {self.queue[i]} {'<-' if i == self.write_pointer else '  '}")
-        return '\n'.join(res)
+            res.append(
+                f" {'<-' if i == self.read_pointer else '  '} {self.queue[i]} {'<-' if i == self.write_pointer else '  '}"
+            )
+        return "\n".join(res)
