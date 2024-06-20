@@ -74,33 +74,33 @@ class CPU:
         }
 
         self.buses = {
-            "data1 ": self.biu.bus_data1,
+            "data1": self.biu.bus_data1,
             "data2": self.biu.bus_data2,
             "instr": self.iq.bus_instr,
-            "addr1 ": self.iq.bus_addr1,
-            "DATA ": self.biu.bus_data,
-            "ADDR ": self.biu.bus_addr,
+            "addr1": self.iq.bus_addr1,
+            "DATA": self.biu.bus_data,
+            "ADDR": self.biu.bus_addr,
         }
 
-    def tickWires(self):
+    def tick_wires(self):
         for key, value in self.wires.items():
             value.tick()
 
-    def tickBuses(self):
+    def tick_buses(self):
         for key, value in self.buses.items():
             value.tick()
 
-    def printWire(self):
+    def wire_to_str(self):
         res = list()
         for key, value in self.wires.items():
             res.append(f"{key.ljust(15)}: {value}")
-        print("\n".join(res))
+        return "\n".join(res)
 
-    def printBuses(self):
+    def busses_to_str(self):
         res = list()
         for key, value in self.buses.items():
-            res.append(f"{key}: {value}")
-        print("\n".join(res))
+            res.append(f"{key.ljust(5)}: {value}")
+        return "\n".join(res)
 
     # _/¯
     def tickUp(self):
@@ -110,13 +110,13 @@ class CPU:
         self.eu.tick()
 
     # ¯\_
-    def tickDown(self):
-        self.tickWires()
-        self.tickBuses()
+    def tick_down(self):
+        self.tick_wires()
+        self.tick_buses()
 
     def tick(self):
         self.tickUp()
-        self.tickDown()
+        self.tick_down()
         # print(f'tick number: {self.tick_num}')
 
     def instr(self):

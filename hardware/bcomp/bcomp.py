@@ -24,23 +24,14 @@ class Bcomp:
         self.bus_addr = self.cpu.bus_addr
 
         self.wire_ready = self.cpu.wires
-        # self.wire_hlt = self.cpu.wire_hlt
+        self.wire_hlt = self.cpu.eu.wire_hlt
         self.wire_read = self.cpu.wire_read
         self.wire_mem = self.cpu.wire_mem
-        # self.wire_instr = self.cpu.wire_instr
+        self.wire_instr = self.cpu.eu.wire_instr
 
     def tick(self):
         # _/¯
         self.cpu.tickUp()
-
-        # print(self.cpu.eu.alu)
-        # print()
-        # print(self.cpu.eu)
-        # print()
-        # print(self.cpu.iq)
-        # print()
-        # print(self.cpu.biu)
-
         if self.cpu.wire_mem.is_high():
             if self.cpu.wire_data_enable.is_high():
                 if self.cpu.wire_read.is_high():
@@ -83,15 +74,8 @@ class Bcomp:
         self.decimal_output.tick()
 
         # ¯\_
-        self.cpu.tickDown()
-
-        # self.cpu.printWire()
-        # print()
-        # self.cpu.printBuses()
-        # print()
-
+        self.cpu.tick_down()
         self.tick_num += 1
-        # print(f'tick: {self.tick_num}')
 
     def instr(self):
         self.tick()
@@ -103,15 +87,6 @@ class Bcomp:
                 return
 
         self.instr_num += 1
-        # print(self.cpu.eu.alu)
-        # print()
-        # print(self.cpu.eu)
-        # print()
-        # print(self.cpu.iq)
-        # print()
-        # print(self.cpu.biu)
-        # print()
-        # print(f'tick: {self.tick_num}')
 
     def run(self, limit=1000000):
         while self.cpu.eu.wire_hlt.is_low():
@@ -119,8 +94,18 @@ class Bcomp:
                 raise ValueError(f"Tick limit {self.tick_num}")
             self.instr()
 
-            logger.info("\n" + str(self.cpu.eu) + "\n" + str(self.cpu.eu.alu))
-            # print(self.cpu.eu)
-            # print(self.cpu.eu.alu)
+            logger.info(
+                "\nUnits:"
+                + "\nEU:\n" + str(self.cpu.eu)
+                + "\nALU:\n" + str(self.cpu.eu.alu)
+                + "\nIQ:\n" + str(self.cpu.iq)
+                + "\nBIU:\n" + str(self.cpu.biu)
+            )
+
+            logger.debug(
+                "\nWires:\n" + self.cpu.wire_to_str()
+                + "\nBusses:\n" + self.cpu.busses_to_str()
+            )
+
             if self.cpu.eu.wire_hlt.is_high():
                 break

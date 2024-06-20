@@ -20,7 +20,7 @@ def test_translator_and_machine(golden, caplog):
     выход изменился -- выводится ошибка.
 
     Если вы меняете логику работы приложения -- то запускаете тесты с ключом:
-    `cd python && poetry run pytest . -v --update-goldens`
+    `poetry run pytest . -v --update-goldens`
 
     Это обновит файлы конфигурации, и вы можете закоммитить изменения в
     репозиторий, если они корректные.
@@ -36,6 +36,7 @@ def test_translator_and_machine(golden, caplog):
 
     Выход:
 
+    - `out_code` -- машинный код, сгенерированный транслятором
     - `out_stdout` -- стандартный вывод транслятора и симулятора
     - `out_log` -- журнал программы
     """
@@ -59,8 +60,14 @@ def test_translator_and_machine(golden, caplog):
         # stdout
         with contextlib.redirect_stdout(io.StringIO()) as stdout:
             compiler.main(source, target)
+            print("============================================================")
             machine.main(target, input_stream)
 
+            # Выходные данные также считываем в переменные.
+            with open(target, 'rb') as file:
+                code = file.read()
+
         # Проверяем, что ожидания соответствуют реальности.
+        assert code == golden.out["out_code"]
         assert stdout.getvalue() == golden.out["out_stdout"]
         assert caplog.text == golden.out["out_log"]
