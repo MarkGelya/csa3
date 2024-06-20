@@ -96,16 +96,17 @@ class Bcomp:
 
             logger.info(
                 "\nUnits:"
-                + "\nEU:\n" + str(self.cpu.eu)
-                + "\nALU:\n" + str(self.cpu.eu.alu)
-                + "\nIQ:\n" + str(self.cpu.iq)
-                + "\nBIU:\n" + str(self.cpu.biu)
+                + "\nEU:\n"
+                + str(self.cpu.eu)
+                + "\nALU:\n"
+                + str(self.cpu.eu.alu)
+                + "\nIQ:\n"
+                + str(self.cpu.iq)
+                + "\nBIU:\n"
+                + str(self.cpu.biu)
             )
 
-            logger.debug(
-                "\nWires:\n" + self.cpu.wire_to_str()
-                + "\nBusses:\n" + self.cpu.busses_to_str()
-            )
+            logger.debug("\nWires:\n" + self.cpu.wire_to_str() + "\nBusses:\n" + self.cpu.busses_to_str())
 
             if self.cpu.eu.wire_hlt.is_high():
                 break

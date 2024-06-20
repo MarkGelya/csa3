@@ -23,9 +23,7 @@ def main(code_filename: str, input_filename: str):
     bcomp = Bcomp(input_filename)
     load_program(bcomp.mem, data)
     bcomp.run()
-    logger.info(
-        f"instr_counter: {bcomp.instr_num} ticks: {bcomp.tick_num}"
-    )
+    logger.info(f"instr_counter: {bcomp.instr_num} ticks: {bcomp.tick_num}")
 
 
 if __name__ == "__main__":
