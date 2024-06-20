@@ -64,7 +64,7 @@ def test_translator_and_machine(golden, caplog):
             machine.main(target, input_stream)
 
             # Выходные данные также считываем в переменные.
-            with open(target, 'rb') as file:
+            with open(target, "rb") as file:
                 code = file.read()
 
         # Проверяем, что ожидания соответствуют реальности.
